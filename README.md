@@ -6,13 +6,13 @@ This project, **ChatGPT Chat History Search**, facilitates the search and visual
 
 To get started with using the **ChatGPT Chat History Search** project, follow these steps:
 
-1. **Clone the Repository:** Begin by cloning this repository to your local machine.
+1. **Clone the Repository:** First, clone this repository to your local machine using the command:
+   ```bash
+   git clone https://github.com/econDS/ChatGPT_chat_history_search.git
 
-2. **Add Conversations Data:** Place your chat history data in the form of a `conversations.json` file within the repository's directory.
+2. **Add Conversations Data:** Export your chat history data from OpenAI by navigating to Settings -> Data Controls -> Export Data. You will receive a zip file in your email. Extract the `conversations.json` file and place it within the repository's directory.
 
-3. **Generate Chat History Excel:** Run the `read_chat.py` script using Python. This script processes the `conversations.json` file and generates an Excel file named `chat.xlsx` containing organized chat data.
-
-4. **View Chat History:** Execute the `run.bat` batch file, which will open the generated `chat.xlsx` file in your default web browser. This Excel file is designed to provide a user-friendly interface for searching and viewing your chat history.
+3. **View Chat History:** Execute the `run.bat` batch file, which will open the generated `chat.xlsx` file in your default web browser. This Excel file is designed to provide a user-friendly interface for searching and viewing your chat history.
 
 ## Requirements
 
