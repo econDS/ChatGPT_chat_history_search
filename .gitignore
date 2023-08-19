@@ -1,0 +1,17 @@
+# Ignore compiled Python bytecode
+__pycache__
+
+# Ignore generated HTML file
+chat.html
+
+# Ignore zip file
+chat20230815.zip
+
+# Ignore Jupyter Notebook file
+read_chat.ipynb
+
+# Ignore Excel file
+chat.xlsx
+
+# Ignore JSON file
+conversations.json
