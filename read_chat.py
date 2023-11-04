@@ -3,13 +3,20 @@ import pandas as pd
 
 def process_content(v):
     try:
-        role = v["message"]["author"]["role"]
+        message = v.get("message", {})
+        author = message.get("author", {})
+        role = author.get("role")
+        content = message.get("content", {})
+        parts = content.get("parts")
+
         if role == "user":
-            content_text = "User: " + v["message"]["content"]["parts"][0] + "\n"
-        elif role == "assistant" and v["message"]["content"].get("parts") is not None:
-            content_text = "ChatGPT:\n" + v["message"]["content"]["parts"][0] + "\n"
+            content_type = content['content_type']
+            index = 1 if content_type == 'multimodal_text' else 0
+            content_text = "User: " + parts[index] + "\n"
+        elif role == "assistant" and content.get("parts") is not None:
+            content_text = "ChatGPT:\n" + parts[0] + "\n"
         else:
-            content_text = "ChatGPT:\n" + v["message"]["content"]["text"] + "\n"
+            content_text = "ChatGPT:\n" + content["text"] + "\n"
     except KeyError:
         content_text = ""
     return content_text

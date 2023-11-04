@@ -11,6 +11,7 @@ CONTENT_DISPLAY_LENGTH = 80
 EXCEL_PATH = 'chat.xlsx'
 
 if not os.path.exists(EXCEL_PATH):
+    print("Excel file not found, creating new file...")
     os.system('python read_chat.py')
 
 # Load Data
