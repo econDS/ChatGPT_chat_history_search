@@ -22,6 +22,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
 def render_dataframe(data_frame: pd.DataFrame) -> str:
     return data_frame.to_html(
         escape=False,
@@ -31,18 +32,23 @@ def render_dataframe(data_frame: pd.DataFrame) -> str:
         justify="center"
     ).replace("<thead>", "<thead class='thead-light'>", 1)
 
+
 def format_data_frame(text: str) -> pd.DataFrame:
-    filter_df = df[df['contents'].str.lower().str.contains(text.lower())]
+    filter_df = df[df['contents'].str.lower().str.contains(text.lower())].copy()
     filter_df.reset_index(drop=True, inplace=True)
     filter_df.index += 1
-    filter_df['create_times'] = pd.to_datetime(filter_df['create_times'], unit='s').dt.strftime('%d %b %Y')
-    filter_df['contents'] = filter_df['contents'].apply(lambda x: x[:CONTENT_DISPLAY_LENGTH] + '...' if len(x) > CONTENT_DISPLAY_LENGTH else x)
+    filter_df.loc[:, 'create_times'] = pd.to_datetime(filter_df['create_times'], unit='s').dt.strftime('%d %b %Y')
+    filter_df.loc[:, 'contents'] = filter_df['contents'].apply(
+        lambda x: x[:CONTENT_DISPLAY_LENGTH] + '...' if len(x) > CONTENT_DISPLAY_LENGTH else x
+    )
     return filter_df
+
 
 def create_clickable_links(row) -> str:
     link = row['link']
     display_text = link.split("/")[-1][:30]
     return f'<a href="{link}" target="_blank">{display_text}</a>'
+
 
 @app.get("/search/")
 @app.get("/search/{text}")
@@ -59,6 +65,7 @@ def get_search(request: Request, text: Optional[str] = ""):
 
     return render_template(request, text, filter_df)
 
+
 def render_template(request: Request, text: str, data_frame: pd.DataFrame):
     return templates.TemplateResponse(
         'df_representation.html',
@@ -68,6 +75,7 @@ def render_template(request: Request, text: str, data_frame: pd.DataFrame):
             'text': text
         }
     )
+
 
 if "__main__" == __name__:
     uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)
