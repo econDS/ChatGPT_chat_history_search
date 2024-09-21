@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import uvicorn
 from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from typing import Optional
@@ -64,6 +65,11 @@ def get_search(request: Request, text: Optional[str] = ""):
         filter_df = pd.DataFrame(columns=filter_df.columns)
 
     return render_template(request, text, filter_df)
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse("static/favicon.ico")
 
 
 def render_template(request: Request, text: str, data_frame: pd.DataFrame):
