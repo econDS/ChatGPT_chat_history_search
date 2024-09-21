@@ -28,4 +28,4 @@ Ensure that you have the following requirements met before using the **ChatGPT C
 
 You can install these dependencies using the following command:
 ```bash
-pip install fastapi pandas openpyxl
+pip install fastapi pandas openpyxl uvicorn
