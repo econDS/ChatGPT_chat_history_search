@@ -8,14 +8,14 @@ from typing import Optional
 
 # Constants
 CONTENT_DISPLAY_LENGTH = 80
-EXCEL_PATH = 'chat.xlsx'
+DATA_PATH = 'chat.csv'
 
-if not os.path.exists(EXCEL_PATH):
-    print("Excel file not found, creating new file...")
+if not os.path.exists(DATA_PATH):
+    print("Data file not found, creating new file...")
     os.system('python read_chat.py')
 
 # Load Data
-df = pd.read_excel(EXCEL_PATH)
+df = pd.read_csv(DATA_PATH)
 print("Data loaded")
 
 app = FastAPI()

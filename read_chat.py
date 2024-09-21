@@ -11,7 +11,7 @@ def process_content(v):
 
         if role == "user":
             content_type = content['content_type']
-            index = 1 if content_type == 'multimodal_text' else 0
+            index = -1 if content_type == 'multimodal_text' else 0
             content_text = "User: " + parts[index] + "\n"
         elif role == "assistant" and content.get("parts") is not None:
             content_text = "ChatGPT:\n" + parts[0] + "\n"
@@ -42,4 +42,4 @@ df = pd.DataFrame({
     "create_times": create_times,
     "contents": contents
 })
-df.to_excel("chat.xlsx", index=False)
+df.to_csv("chat.csv", index=False)
