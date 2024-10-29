@@ -1,25 +1,60 @@
 import json
 import pandas as pd
 
-def process_content(v):
+def process_content(message_data):
     try:
-        message = v.get("message", {})
+        message = message_data.get("message", {})
         author = message.get("author", {})
         role = author.get("role")
         content = message.get("content", {})
-        parts = content.get("parts")
+        parts = content.get("parts", [])
 
+        # Define prefix based on the role
+        prefix = ""
         if role == "user":
-            content_type = content['content_type']
+            prefix = "User: "
+            content_type = content.get('content_type', '')
             index = -1 if content_type == 'multimodal_text' else 0
-            content_text = "User: " + parts[index] + "\n"
-        elif role == "assistant" and content.get("parts") is not None:
-            content_text = "ChatGPT:\n" + parts[0] + "\n"
+            part = parts[index] if len(parts) > index else {}
+            
+            if isinstance(part, dict):
+                if part.get('content_type') == 'audio_transcription':
+                    text = part.get('text', '')
+                else:
+                    text = part.get('text', part)
+            else:
+                text = part
+            content_text = f"{prefix}{text}\n"
+
+        elif role == "assistant":
+            prefix = "ChatGPT: "
+            if not parts:
+                # Handle case where parts are missing for assistant
+                text = content.get("text", "")
+                content_text = f"{prefix}{text}\n"
+            else:
+                part = parts[0]
+                if isinstance(part, dict):
+                    content_type = part.get('content_type')
+                    if content_type == 'audio_transcription':
+                        text = part.get('text', '')
+                    elif content_type == 'audio_asset_pointer':
+                        text = 'Cannot translate audio.'
+                    else:
+                        text = part.get('text', '')
+                else:
+                    text = part
+                content_text = f"{prefix}{text}\n"
         else:
-            content_text = "ChatGPT:\n" + content["text"] + "\n"
-    except KeyError:
-        content_text = ""
-    return content_text
+            # Handle other roles or missing roles
+            content_text = ""
+
+        return content_text
+
+    except Exception as e:
+        print(f"Error processing content: {e}")
+        return ""
+
 
 with open("conversations.json", 'r') as f:
     data = json.load(f)
